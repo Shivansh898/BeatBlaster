@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>BeatBlaster</title>
+
+<style>
+body{
+    background:black;
+    color:white;
+    text-align:center;
+    font-family:Arial;
+}
+
+#game{
+    width:400px;
+    height:600px;
+    border:3px solid white;
+    margin:auto;
+    position:relative;
+    overflow:hidden;
+}
+
+.note{
+    width:80px;
+    height:30px;
+    background:cyan;
+    position:absolute;
+}
+
+.lane{
+    position:absolute;
+    bottom:0;
+    width:100px;
+    height:80px;
+    border-top:3px solid white;
+    text-align:center;
+    line-height:80px;
+    font-size:30px;
+}
+
+#a{left:0;}
+#s{left:100px;}
+#d{left:200px;}
+#f{left:300px;}
+
+#score{
+    font-size:30px;
+    margin:20px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🎵 BeatBlaster 🎵</h1>
+<div id="score">Score: 0</div>
+
+<div id="game">
+
+<div class="lane" id="a">A</div>
+<div class="lane" id="s">S</div>
+<div class="lane" id="d">D</div>
+<div class="lane" id="f">F</div>
+
+</div>
+
+<script>
+
+let score = 0;
+
+function spawnNote(){
+
+let lane = Math.floor(Math.random()*4);
+
+let note = document.createElement("div");
+
+note.classList.add("note");
+
+note.style.left = (lane*100+10)+"px";
+note.style.top = "0px";
+
+note.dataset.lane = lane;
+
+document.getElementById("game").appendChild(note);
+
+let fall = setInterval(()=>{
+
+note.style.top =
+(parseInt(note.style.top)+5)+"px";
+
+if(parseInt(note.style.top) > 570){
+note.remove();
+clearInterval(fall);
+}
+
+},20);
+
+}
+
+setInterval(spawnNote,1000);
+
+document.addEventListener("keydown",(e)=>{
+
+let lane = null;
+
+if(e.key==="a") lane=0;
+if(e.key==="s") lane=1;
+if(e.key==="d") lane=2;
+if(e.key==="f") lane=3;
+
+document.querySelectorAll(".note").forEach(note=>{
+
+let y=parseInt(note.style.top);
+
+if(
+Number(note.dataset.lane)===lane
+&& y>480
+){
+
+score+=10;
+
+document.getElementById("score").innerText=
+"Score: "+score;
+
+note.remove();
+
+}
+
+});
+
+});
+
+</script>
+
+</body>
+</html>
